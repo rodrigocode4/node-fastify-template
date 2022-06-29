@@ -1,7 +1,6 @@
 FROM public.ecr.aws/docker/library/node:16-alpine AS builder
-USER node
 WORKDIR /app
-COPY --chown=node:node . .
+COPY . .
 RUN yarn
 RUN yarn build
 
