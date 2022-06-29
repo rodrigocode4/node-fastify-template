@@ -11,6 +11,7 @@
     "test": "NODE_ENV=test jest --no-chache --detectOpenHandles --forceExit"
   },
   "dependencies": {
+    "@dnlup/fastify-traps": "^2.0.0",
     "@fastify/cors": "^8.0.0",
     "@fastify/helmet": "^9.1.0",
     "@fastify/response-validation": "^2.0.0",

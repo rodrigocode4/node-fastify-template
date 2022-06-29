@@ -18,5 +18,6 @@ export default app
   .register(require('@fastify/cors'))
   .register(require('@fastify/helmet'))
   .register(require('@fastify/swagger'), swaggerOpts)
+  .register(require('@dnlup/fastify-traps'))
   .register(require('./src/infrastructure/dotenv'))
   .register(require('./src/routes'))
