@@ -1,4 +1,7 @@
-import dotenv from 'dotenv'
+let dotenv: any = null
+if (process.env.NODE_ENV !== 'production') {
+  dotenv = require('dotenv')
+}
 import { App } from '../modules/base/base.types'
 
 export default async (app: App,) => {
