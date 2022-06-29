@@ -24,3 +24,7 @@ phases:
       - echo "[+] Build completed on `date`"
       - echo "[+] Pushing the Docker image..."
       - docker push $IMAGE_URI
+      - printf '[{"name":"node-fastify-template-task-definition","imageUri":"%s"}]' $IMAGE_URI > imagedefinitions.json
+
+  artifacts:
+      files: imagedefinitions.json
