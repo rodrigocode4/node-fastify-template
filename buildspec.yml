@@ -8,7 +8,8 @@ phases:
       - export BUILD_TAG=build-`echo build-$CODEBUILD_BUILD_ID | awk -F":" '{print $2}'`
       - export IMAGE_TAG=$IMAGE_REPO_NAME:$BUILD_TAG
       - export IMAGE_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_TAG
-
+      - curl -L --no-progress-meter --output /usr/local/bin/docker-compose https://github.com/docker/compose/releases/download/v2.5.0/docker-compose-linux-x86_64
+      - sudo chmod +x /usr/local/bin/docker-compose
   pre_build:
     commands:
       - echo "[+] Running tests..."
