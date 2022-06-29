@@ -1,0 +1,14 @@
+version: "3.9"
+
+services:
+  db:
+    container_name: node_template
+    image: mysql:latest
+    platform: linux/x86_64
+    restart: always
+    ports:
+      - "${DB_PORT}:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
+      MYSQL_PASSWORD: "${DB_PASSWORD}"
+      MYSQL_DATABASE: "${DB_NAME}"
