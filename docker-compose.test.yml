@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  database:
+    image: public.ecr.aws/docker/library/mysql:latest
+    platform: linux/x86_64
+    environment:
+      MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
+      MYSQL_PASSWORD: "${DB_PASSWORD}"
+    networks:
+      - test
+
+  test:
+    image: public.ecr.aws/docker/library/node:16-alpine
+    working_dir: /app
+    volumes:
+      - ${PWD}:/app
+    environment:
+      - ${DB_HOST}=database
+    command: sh -c "yarn && yarn test"
+    depends_on:
+      - database
+    networks:
+      - test
+
+networks:
+  test:
+    driver: bridge

@@ -15,7 +15,7 @@ describe('User', () => {
     
     expect(rs.statusCode).toBe(200)
     expect(rs.json()).toEqual({data: {
-      name: 'saller'
+      name: 'Rodrigo'
     }})
   })
 })
