@@ -7,8 +7,6 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
       MYSQL_PASSWORD: "${DB_PASSWORD}"
-    networks:
-      - test
 
   test:
     image: public.ecr.aws/docker/library/node:16-alpine
@@ -17,12 +15,7 @@ services:
       - ${PWD}:/app
     environment:
       - ${DB_HOST}=database
-    command: sh -c "yarn && yarn test"
+    command: sh -c "yarn && yarn test:ci"
     depends_on:
       - database
-    networks:
-      - test
 
-networks:
-  test:
-    driver: bridge

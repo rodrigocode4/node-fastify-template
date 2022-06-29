@@ -8,7 +8,8 @@
     "build": "tsc -p tsconfig.build.json",
     "server": "node ./dist/index.js",
     "migrate": "knex migrate:latest",
-    "test": "NODE_ENV=test jest --no-chache --detectOpenHandles --forceExit"
+    "test": "NODE_ENV=test jest --no-chache --detectOpenHandles --forceExit",
+    "test:ci": "NODE_ENV=test DB_HOST=database jest --no-chache --detectOpenHandles --forceExit"
   },
   "dependencies": {
     "@dnlup/fastify-traps": "^2.0.0",
