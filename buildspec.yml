@@ -1,0 +1,26 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo "[+] Logging in to Amazon ECR..."
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+      - export BUILD_TAG=build-`echo build-$CODEBUILD_BUILD_ID | awk -F":" '{print $2}'`
+      - export IMAGE_TAG=$IMAGE_REPO_NAME:$BUILD_TAG
+      - export IMAGE_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_TAG
+
+  pre_build:
+    commands:
+      - echo "[+] Running tests..."
+      - docker-compose -f docker-compose.test.yml --env-file=.env.test run --rm test
+  build:
+    commands:
+      - echo "[+] Build started on `date`"
+      - echo "[+] Building the Docker image..."
+      - docker build -t $IMAGE_TAG .
+      - docker tag $IMAGE_TAG $IMAGE_URI
+  post_build:
+    commands:
+      - echo "[+] Build completed on `date`"
+      - echo "[+] Pushing the Docker image..."
+      - docker push $IMAGE_URI

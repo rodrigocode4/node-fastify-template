@@ -1,5 +1,4 @@
 FROM public.ecr.aws/docker/library/node:16-alpine AS builder
-RUN mkdir -p /app/node_modules && chown -R node:node /app
 USER node
 WORKDIR /app
 COPY --chown=node:node . .
