@@ -1,4 +1,4 @@
-import app from "../../../app"
+import app from "../../app"
 import { StatusCodes } from 'http-status-codes'
 import userBuilder from "../../infrastructure/builders/user.builder"
 import { User } from "./user.types"
@@ -67,17 +67,22 @@ describe('User', () => {
     expect(resp.json<ExpectType>()).toStrictEqual(expected)
   })
 
-  test('GET / Deve retornar status BAD_REQUEST ao passar quary inválida', async () => {
+  test.each([
+    'asd4', '4asd',
+    'as4d', '@asd', 
+    '*', '123',
+    '(asd)', '[asd]'
+  ])('GET / Deve retornar status BAD_REQUEST ao passar quary inválida: %s', async (queryParam) => {
 
     const expected: ExpectType = {
       data: null,
-      errors: ['querystring/name must match pattern "^((?!\\d).)*$"']
+      errors: ['querystring/name must match pattern "^((?!\d)[a-zA-Z\s])*$"']
     }
 
     const resp = await app.inject({
       method: 'GET',
       url: BASE_URL,
-      query: { name: 'as123'}
+      query: { name: queryParam }
     })
 
     expect(resp.statusCode).toBe(StatusCodes.BAD_REQUEST)
