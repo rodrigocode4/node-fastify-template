@@ -10,7 +10,7 @@ export const userGetOpts: Opts = {
       properties: {
         name: {
           type: 'string',
-          pattern: '^((?!\d)[a-zA-Z\s])*$'
+          pattern: '^((?!d)[a-zA-Z\s]+)*$'
         }
 
       }

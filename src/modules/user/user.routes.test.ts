@@ -76,7 +76,7 @@ describe('User', () => {
 
     const expected: ExpectType = {
       data: null,
-      errors: ['querystring/name must match pattern "^((?!\d)[a-zA-Z\s])*$"']
+      errors: ['querystring/name must match pattern "^((?!d)[a-zA-Zs]+)*$"']
     }
 
     const resp = await app.inject({
