@@ -1,25 +1,19 @@
-import errorSchema from "../../infrastructure/error.schema"
+import errorSchema from "../../infrastructure/error/error.schema"
 import { Opts } from "../base/base.types"
 
-export const userPostOpts: Opts = {
+export const userGetOpts: Opts = {
   schema: {
-    description: 'post some data',
-    tags: ['code'],
+    tags: ['user'],
     summary: 'qwerty',
-    security: [{ apiKey: [] }],
-    body: {
+    querystring: {
       type: 'object',
       properties: {
-        hello: { type: 'string' },
-        obj: {
-          type: 'object',
-          properties: {
-            some: { type: 'string' }
-          },
-          required: ['some']
+        name: {
+          type: 'string',
+          pattern: '^((?!\\d).)*$'
         }
-      },
-      required: ['hello', 'obj']
+
+      }
     },
     response: {
       200: {
@@ -29,34 +23,49 @@ export const userPostOpts: Opts = {
           data: {
             type: 'object',
             properties: {
-              hello: { type: 'string' }
+              users: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    id: { type: 'integer' },
+                    name: { type: 'string' },
+                    age: { type: 'number' },
+                    createdAt: { type: 'string' },
+                    updatedAt: { type: 'string' }
+                  }
+                }
+              }
             }
+          },
+          errors: {
+            type: 'null',
+            default: null
           }
         }
       },
-      ...errorSchema(),
-    }
-  }
-}
-
-export const userGetOpts: Opts = {
-  schema: {
-    tags: ['user'],
-    summary: 'qwerty',
-    response: {
-      200: {
+      206: {
+        description: 'Not content response',
         type: 'object',
         properties: {
           data: {
             type: 'object',
             properties: {
-              name: {
-                type: 'string'
+              users: {
+                type: 'array',
+                default: []
               }
             }
           },
+          errors: {
+            type: 'array',
+            items: {
+              type: 'string'
+            }
+          }
         }
-      },  
+      },
+      ...errorSchema([404, 500]),
     }
   },
 }

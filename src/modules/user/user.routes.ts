@@ -1,17 +1,25 @@
+import { StatusCodes } from 'http-status-codes'
+import messages from "../../infrastructure/messages"
 import { App } from "../base/base.types"
-import { userGetOpts, userPostOpts} from './user.opts'
-
+import { userGetOpts } from './user.opts'
+import service from './user.service'
 
 export default async (app: App) => {
 
-  app.get('/user', userGetOpts, async (_req, reply) => {
-    return reply.status(200).send({data: {
-      name: "Rodrigo"
-    }})
-  })
+  app.get('/', userGetOpts, async (req, reply) => {
+    const { name } = <{name: string}>req.query
+    const { data: users } = await service.get(name)
 
-  app.post('/aa', userPostOpts, async (_req, reply) =>{ 
-    reply.code(200).send({ data: {hello: `Hello`} })
+    let errors: string[] | undefined
+    let status = StatusCodes.OK
+    const errorMessage = messages.listHasNoDataFound(users)
+
+    if(errorMessage) {
+      status = StatusCodes.PARTIAL_CONTENT
+      errors = [ errorMessage ]
+    }
+    
+    return reply.status(status).send({ data: { users }, errors})
   })
 
 }

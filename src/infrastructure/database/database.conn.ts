@@ -1,5 +1,8 @@
 import knex, { Knex } from 'knex'
 import knexStringCase from 'knex-stringcase'
+import app from '../../../app'
+import dotenv from '../dotenv'
+import typeCast from './database.utils'
 
 export const getConfig = (withoutDatabase = false): Knex.Config => ({
   client: 'mysql2',
@@ -9,14 +12,13 @@ export const getConfig = (withoutDatabase = false): Knex.Config => ({
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: withoutDatabase ? undefined : process.env.DB_NAME,
-    charset: 'utf8'
+    typeCast
   },
   migrations: { tableName: 'migrations' },
   debug: process.env.JEST_WORKER_ID ? false : Boolean(process.env.DB_DEBUG),
-
 })
 
-const config = getConfig()
-const options = knexStringCase(config)
+dotenv(app)
+const options = knexStringCase(getConfig())
 
 export default knex(options)

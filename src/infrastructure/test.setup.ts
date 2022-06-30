@@ -1,8 +1,8 @@
 import knex from 'knex'
 import app from '../../app'
 import dotenv from './dotenv'
-import { getConfig } from './database'
-
+import { getConfig } from './database/database.conn'
+import database from './database/database.conn'
 
 const tables = [
   'users',
@@ -13,22 +13,17 @@ const setup = async () => {
 
   const knexWithoutDb = knex(getConfig(true))
   await knexWithoutDb.raw(`create database if not exists ${process.env.DB_NAME};`)
+  await knexWithoutDb.destroy()
 
-  const config = getConfig()
-  const knexWithDb = knex(config)
-
-  await knexWithDb.migrate.latest()
-  await knexWithDb.destroy()
+  await database.migrate.latest()
 }
 
 const teardown = async () => {
-  const knexWithoutDb = knex(getConfig(true))
-  await knexWithoutDb.raw(`drop database ${process.env.DB_NAME};`)
-  knexWithoutDb.destroy()
+  await database.raw(`drop database ${process.env.DB_NAME};`)
+  await database.destroy()
 }
 
 const truncateTables = async () => {
-  const database = knex(getConfig())
   await Promise.all(tables.map((table) => database(table).truncate()))
 }
 
@@ -43,4 +38,5 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await teardown()
+  await app.close()
 })
