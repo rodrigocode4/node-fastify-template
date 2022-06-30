@@ -1,5 +1,5 @@
 import knex from 'knex'
-import app from '../../app'
+import app from '../app'
 import dotenv from './dotenv'
 import { getConfig } from './database/database.conn'
 import database from './database/database.conn'

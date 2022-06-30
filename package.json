@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "ts-node-dev --respawn --transpile-only index.ts",
+    "start": "DEBUG=1 ts-node-dev --respawn --transpile-only index.ts",
     "build": "rm -rf ./dist && tsc -p tsconfig.build.json",
     "server": "node ./dist/index.js",
     "migrate:run": "knex migrate:latest",

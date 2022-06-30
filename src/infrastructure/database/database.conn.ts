@@ -1,6 +1,6 @@
 import knex, { Knex } from 'knex'
 import knexStringCase from 'knex-stringcase'
-import app from '../../../app'
+import app from '../../app'
 import dotenv from '../dotenv'
 import typeCast from './database.utils'
 
@@ -15,7 +15,6 @@ export const getConfig = (withoutDatabase = false): Knex.Config => ({
     typeCast
   },
   migrations: { tableName: 'migrations' },
-  debug: process.env.JEST_WORKER_ID ? false : Boolean(process.env.DB_DEBUG),
 })
 
 dotenv(app)

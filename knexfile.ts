@@ -1,5 +1,5 @@
 import { Knex } from 'knex'
-import app from './app'
+import app from './src/app'
 import dotenv from './src/infrastructure/dotenv'
 import typeCast from './src/infrastructure/database/database.utils'
 dotenv(app)
