@@ -1,6 +1,6 @@
-import app from "../../app"
+import app from "~/app"
 import { StatusCodes } from 'http-status-codes'
-import userBuilder from "../../infrastructure/builders/user.builder"
+import userBuilder from "~/infrastructure/builders/user.builder"
 import { User } from "./user.types"
 
 const BASE_URL = '/api/v1/user/'

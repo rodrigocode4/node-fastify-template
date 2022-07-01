@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker'
-import { User } from '../../modules/user/user.types'
+import { User } from '~/modules/user/user.types'
 import database from '../database/database.conn'
 
 export default () => ({

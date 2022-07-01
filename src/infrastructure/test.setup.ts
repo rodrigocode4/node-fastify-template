@@ -1,6 +1,6 @@
 import knex from 'knex'
 import app from '../app'
-import dotenv from './dotenv'
+import dotenvLoad from './dotenv.load'
 import { getConfig } from './database/database.conn'
 import database from './database/database.conn'
 
@@ -9,7 +9,7 @@ const tables = [
 ]
 
 const setup = async () => {
-  await dotenv(app)
+  await dotenvLoad()
 
   const knexWithoutDb = knex(getConfig(true))
   await knexWithoutDb.raw(`create database if not exists ${process.env.DB_NAME};`)

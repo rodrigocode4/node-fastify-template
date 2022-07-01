@@ -1,7 +1,6 @@
 import knex, { Knex } from 'knex'
 import knexStringCase from 'knex-stringcase'
-import app from '../../app'
-import dotenv from '../dotenv'
+import dotenvLoad from '../dotenv.load'
 import typeCast from './database.utils'
 
 export const getConfig = (withoutDatabase = false): Knex.Config => ({
@@ -17,7 +16,7 @@ export const getConfig = (withoutDatabase = false): Knex.Config => ({
   migrations: { tableName: 'migrations' },
 })
 
-dotenv(app)
+dotenvLoad()
 const options = knexStringCase(getConfig())
 
 export default knex(options)

@@ -1,5 +1,5 @@
 import { StatusCodes } from 'http-status-codes'
-import messages from "../../infrastructure/messages"
+import messages from "~/infrastructure/messages"
 import { App } from "../base/base.types"
 import { userGetOpts } from './user.opts'
 import service from './user.service'

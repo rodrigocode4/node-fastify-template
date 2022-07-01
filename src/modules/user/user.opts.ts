@@ -1,4 +1,4 @@
-import errorSchema from "../../infrastructure/error/error.schema"
+import errorSchema from "~/infrastructure/error/error.schema"
 import { Opts } from "../base/base.types"
 
 export const userGetOpts: Opts = {
@@ -45,7 +45,7 @@ export const userGetOpts: Opts = {
         }
       },
       206: {
-        description: 'Not content response',
+        description: 'Partial content response',
         type: 'object',
         properties: {
           data: {

@@ -1,4 +1,4 @@
-import database from '../../infrastructure/database/database.conn'
+import database from '~/infrastructure/database/database.conn'
 import { User } from './user.types'
 
 const table = 'users'

@@ -11,7 +11,7 @@ const start = async () => {
       app.log.debug(`SQL: ${builder.toQuery()}`)
     })
 
-    app.log.info(`Docs listening at http://localhost${PORT}/docs`)
+    app.log.info(`Docs listening at http://localhost:${PORT}/docs`)
     app.log.info('Server has started! 🚀')
   } catch (err) {
     console.log(err)

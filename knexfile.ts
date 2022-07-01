@@ -1,8 +1,8 @@
 import { Knex } from 'knex'
-import app from './src/app'
-import dotenv from './src/infrastructure/dotenv'
+import dotenvLoad from './src/infrastructure/dotenv.load'
 import typeCast from './src/infrastructure/database/database.utils'
-dotenv(app)
+
+dotenvLoad()
 
 export const config: { [key: string]: Knex.Config } = {
   development: {
@@ -16,8 +16,7 @@ export const config: { [key: string]: Knex.Config } = {
       typeCast
     },
     migrations: { tableName: 'migrations' },
-    debug: Boolean(process.env.DB_DEBUG),
   },
 }
 
-module.exports = config
+export default config

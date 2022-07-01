@@ -1,6 +1,6 @@
 import { ServiceResult, createErrorServiceResult, createSuccessServiceResult} from '../../infrastructure/result.service'
 import repository from './user.repository'
-import messages from '../../infrastructure/messages'
+import messages from '~/infrastructure/messages'
 import { User } from './user.types'
 
 export default {
