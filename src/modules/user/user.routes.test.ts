@@ -1,7 +1,7 @@
-import app from "~/app"
+import app from '~/app'
 import { StatusCodes } from 'http-status-codes'
-import userBuilder from "~/infrastructure/builders/user.builder"
-import { User } from "./user.types"
+import userBuilder from '~/infrastructure/builders/user.builder'
+import { User } from './user.types'
 
 const BASE_URL = '/api/v1/user/'
 
@@ -13,14 +13,14 @@ describe('User', () => {
   test('GET / Deve retornar status PARTIAL_CONTENT e com lista vazia', async () => {
     const expected: ExpectType = {
       data: {
-        users: []
+        users: [],
       },
-      errors: ['No data found']
+      errors: ['No data found'],
     }
 
     const resp = await app.inject({
       method: 'GET',
-      url: BASE_URL
+      url: BASE_URL,
     })
 
     expect(resp.statusCode).toBe(StatusCodes.PARTIAL_CONTENT)
@@ -32,14 +32,14 @@ describe('User', () => {
     const user2 = await userBuilder().insert()
     const expected: ExpectType = {
       data: {
-        users: [user1, user2]
+        users: [user1, user2],
       },
-      errors: null
+      errors: null,
     }
 
     const resp = await app.inject({
       method: 'GET',
-      url: BASE_URL
+      url: BASE_URL,
     })
 
     expect(resp.statusCode).toBe(StatusCodes.OK)
@@ -52,15 +52,15 @@ describe('User', () => {
 
     const expected: ExpectType = {
       data: {
-        users: [user]
+        users: [user],
       },
-      errors: null
+      errors: null,
     }
 
     const resp = await app.inject({
       method: 'GET',
       url: BASE_URL,
-      query: { name: user.name}
+      query: { name: user.name},
     })
 
     expect(resp.statusCode).toBe(StatusCodes.OK)
@@ -71,18 +71,19 @@ describe('User', () => {
     'asd4', '4asd',
     'as4d', '@asd', 
     '*', '123',
-    '(asd)', '[asd]'
+    '(asd)', '[asd]',
+    'asrr d2d', '3aasd]'
   ])('GET / Deve retornar status BAD_REQUEST ao passar quary inválida: %s', async (queryParam) => {
 
     const expected: ExpectType = {
       data: null,
-      errors: ['querystring/name must match pattern "^((?!d)[a-zA-Zs]+)*$"']
+      errors: ['querystring/name must match pattern "^((?!d)[a-zA-Z\\s]+)*$"'],
     }
 
     const resp = await app.inject({
       method: 'GET',
       url: BASE_URL,
-      query: { name: queryParam }
+      query: { name: queryParam },
     })
 
     expect(resp.statusCode).toBe(StatusCodes.BAD_REQUEST)

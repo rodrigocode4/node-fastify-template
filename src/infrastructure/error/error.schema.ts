@@ -10,10 +10,10 @@ const schema = {
     errors: {
       type: 'array',
       items: {
-          type: 'string'
-      }
-    }
-  } 
+        type: 'string',
+      },
+    },
+  }, 
 }
 
 export default (codes = [400, 500]) => {

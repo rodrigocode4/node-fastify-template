@@ -1,5 +1,5 @@
-import errorSchema from "~/infrastructure/error/error.schema"
-import { Opts } from "../base/base.types"
+import errorSchema from '~/infrastructure/error/error.schema'
+import { Opts } from '../base/base.types'
 
 export const userGetOpts: Opts = {
   schema: {
@@ -10,10 +10,9 @@ export const userGetOpts: Opts = {
       properties: {
         name: {
           type: 'string',
-          pattern: '^((?!d)[a-zA-Z\s]+)*$'
-        }
-
-      }
+          pattern: '^((?!d)[a-zA-Z\\s]+)*$',
+        },
+      },
     },
     response: {
       200: {
@@ -32,17 +31,17 @@ export const userGetOpts: Opts = {
                     name: { type: 'string' },
                     age: { type: 'number' },
                     createdAt: { type: 'string' },
-                    updatedAt: { type: 'string' }
-                  }
-                }
-              }
-            }
+                    updatedAt: { type: 'string' },
+                  },
+                },
+              },
+            },
           },
           errors: {
             type: 'null',
-            default: null
-          }
-        }
+            default: null,
+          },
+        },
       },
       206: {
         description: 'Partial content response',
@@ -53,19 +52,19 @@ export const userGetOpts: Opts = {
             properties: {
               users: {
                 type: 'array',
-                default: []
-              }
-            }
+                default: [],
+              },
+            },
           },
           errors: {
             type: 'array',
             items: {
-              type: 'string'
-            }
-          }
-        }
+              type: 'string',
+            },
+          },
+        },
       },
       ...errorSchema([404, 500]),
-    }
+    },
   },
 }

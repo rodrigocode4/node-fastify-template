@@ -11,7 +11,7 @@ export const getConfig = (withoutDatabase = false): Knex.Config => ({
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: withoutDatabase ? undefined : process.env.DB_NAME,
-    typeCast
+    typeCast,
   },
   migrations: { tableName: 'migrations' },
 })

@@ -9,8 +9,8 @@ const swaggerOpts: FastifyDynamicSwaggerOptions = {
       description: 'testing the fastify swagger api',
       version: '0.1.0',
       license: {
-        name: 'MIT'
-      }
+        name: 'MIT',
+      },
     },
     components: {
       securitySchemes: {
@@ -18,12 +18,12 @@ const swaggerOpts: FastifyDynamicSwaggerOptions = {
           type: 'apiKey',
           name: 'apiKey',
           in: 'header',
-        }
+        },
       },
     },
   },
   hideUntagged: true,
-  exposeRoute: true
+  exposeRoute: true,
 }
 
 export default swaggerOpts

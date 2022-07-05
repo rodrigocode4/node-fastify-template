@@ -1,9 +1,8 @@
 import Fastify from 'fastify'
 import swaggerOpts from './infrastructure/swagger/swagger.opts'
-import errorHandler from './infrastructure/handle/handle.error'
+import handler from './infrastructure/handler'
 import errorHook from './infrastructure/error/error.hook'
 import loggerOpts from './infrastructure/logger/logger.opts'
-import notfoundHandler from './infrastructure/handle/handle.notfound'
 
 const app = Fastify({
   logger: process.env.NODE_ENV !== 'test' ? loggerOpts : false,
@@ -12,8 +11,8 @@ const app = Fastify({
 
 export default app
   .addHook('onResponse', errorHook)
-  .setErrorHandler(errorHandler)
-  .setNotFoundHandler(notfoundHandler)
+  .setErrorHandler(handler.errorHandler)
+  .setNotFoundHandler(handler.notFoundHandler)
   .register(require('@fastify/response-validation'))
   .register(require('@fastify/cors'))
   .register(require('@fastify/helmet'))
