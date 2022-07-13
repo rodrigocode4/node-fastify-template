@@ -5,8 +5,8 @@ const swaggerOpts: FastifyDynamicSwaggerOptions = {
   mode: 'dynamic',
   openapi: {
     info: {
-      title: 'Test swagger',
-      description: 'testing the fastify swagger api',
+      title: 'Node Fatify API',
+      description: 'Documentação da api com Fastify',
       version: '0.1.0',
       license: {
         name: 'MIT',
@@ -14,10 +14,9 @@ const swaggerOpts: FastifyDynamicSwaggerOptions = {
     },
     components: {
       securitySchemes: {
-        apiKey: {
-          type: 'apiKey',
-          name: 'apiKey',
-          in: 'header',
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
         },
       },
     },

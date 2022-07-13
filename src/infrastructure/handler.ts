@@ -1,14 +1,14 @@
 import { Error, Req, Reply } from '~/modules/base/base.types'
 
 
-const errorHandler = async (error: Error, request: Req, reply: Reply) => {
+const errorHandler = async (error: Error & { sqlMessage?: string }, request: Req, reply: Reply) => {
   if(error.validation) {
     return reply.status(400).send({ data: null, errors: [error.message] })
   }
 
   request.log.error(`An internal server error occured ${error}`)
   
-  return reply.status(500).send({data: null, errors: [error.message || 'Unknown error']})
+  return reply.status(500).send({data: null, errors: [error?.sqlMessage || error?.message || 'Unknown error']})
 }
 
 

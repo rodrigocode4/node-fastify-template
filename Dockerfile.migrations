@@ -1,0 +1,11 @@
+FROM public.ecr.aws/docker/library/node:16-alpine
+WORKDIR /app
+
+RUN yarn init -y
+RUN yarn add knex
+RUN yarn add -D typescript @types/node
+
+COPY ./knexfile.ts .
+COPY ./migrations ./
+
+CMD ["yarn", "knex", "migrate:latest"]
