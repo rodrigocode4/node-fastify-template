@@ -13,7 +13,7 @@ export const config: { [key: string]: Knex.Config } = {
       user: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      typeCast
+      typeCast,
     },
     migrations: { tableName: 'migrations' },
   },

@@ -3,7 +3,7 @@ export interface ServiceResult<T> {
   data?: T,
 }
 
-const createServiceResult = <T>(errors?: string[], data?: T): ServiceResult<T> => ({
+export const createServiceResult = <T>(errors?: string[], data?: T): ServiceResult<T> => ({
   errors,
   data,
 })

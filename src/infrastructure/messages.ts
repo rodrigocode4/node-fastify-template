@@ -1,7 +1,7 @@
 const noDataFound = 'No data found'
 
 export default {
-  listHasNoDataFound: (data?: any[]) => (data?.length === 0 ? noDataFound : undefined),
+  listHasNoDataFound: (data?: unknown[]) => (data?.length === 0 ? noDataFound : undefined),
   successfullyCreated: (entityName: string) => `${entityName} successfully created`,
   successfullyDeleted: (entityName: string) => `${entityName} successfully deleted`,
   successfullyUpdated: (entityName: string) => `${entityName} successfully updated`,

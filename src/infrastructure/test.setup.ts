@@ -1,11 +1,10 @@
 import knex from 'knex'
 import app from '../app'
 import dotenvLoad from './dotenv.load'
-import { getConfig } from './database/database.conn'
-import database from './database/database.conn'
+import database, { getConfig } from './database/database.conn'
 
 const tables = [
-  'users',
+  'users'
 ]
 
 const setup = async () => {

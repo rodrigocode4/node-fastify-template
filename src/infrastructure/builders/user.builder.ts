@@ -24,6 +24,6 @@ export default () => ({
 
   async insert(): Promise<User> {
     const [id] = await database<User>('users').insert(this.user)
-    return database<User>('users').select().where({id}).first<User>()
-  }
+    return database<User>('users').select().where({ id }).first<User>()
+  },
 })
