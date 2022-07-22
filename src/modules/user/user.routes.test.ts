@@ -1,5 +1,5 @@
-import app from '~/app'
 import { StatusCodes } from 'http-status-codes'
+import app from '~/app'
 import userBuilder from '~/infrastructure/builders/user.builder'
 import { User, UserPick } from './user.types'
 
@@ -7,9 +7,7 @@ const BASE_URL = '/api/v1/user/'
 
 type ExpectType = { data: { user: User } | { users: User[] } | null, errors: string[] | null}
 
-
 describe('User', () => {
-
   test('GET / Deve retornar status PARTIAL_CONTENT e com lista vazia', async () => {
     const expected: ExpectType = {
       data: {
@@ -60,7 +58,7 @@ describe('User', () => {
     const resp = await app.inject({
       method: 'GET',
       url: BASE_URL,
-      query: { name: user.name},
+      query: { name: user.name },
     })
 
     expect(resp.statusCode).toBe(StatusCodes.OK)
@@ -69,12 +67,11 @@ describe('User', () => {
 
   test.each([
     'asd4', '4asd',
-    'as4d', '@asd', 
+    'as4d', '@asd',
     '*', '123',
     '(asd)', '[asd]',
     'asrr d2d', '3aasd]'
   ])('GET / Deve retornar status BAD_REQUEST ao passar quary inválida: %s', async (queryParam) => {
-
     const expected: ExpectType = {
       data: null,
       errors: ['querystring/name must match pattern "^((?!d)[a-zA-Z\\s]+)*$"'],
@@ -119,10 +116,10 @@ describe('User', () => {
 
   test.each`
   payload                    | message
-  ${{age: 26}}               | ${'body must have required property \'name\''}
-  ${{name: 'Rodrigo'}}       | ${'body must have required property \'age\''}
-  ${{name: 'Edson',age: -1}} | ${'body/age must be >= 0'}
-  `('POST / Não deve criar usuário e retornar BAD_REQUEST dado o payload: $payload', async ({payload, message}) => {
+  ${{ age: 26 }}               | ${'body must have required property \'name\''}
+  ${{ name: 'Rodrigo' }}       | ${'body must have required property \'age\''}
+  ${{ name: 'Edson', age: -1 }} | ${'body/age must be >= 0'}
+  `('POST / Não deve criar usuário e retornar BAD_REQUEST dado o payload: $payload', async ({ payload, message }) => {
     const expected: ExpectType = {
       data: null,
       errors: [message],
@@ -139,10 +136,10 @@ describe('User', () => {
 
   test.each`
   payload                    | message
-  ${{age: 26}}               | ${'body must have required property \'name\''}
-  ${{name: 'Rodrigo'}}       | ${'body must have required property \'age\''}
-  ${{name: 'Edson',age: -1}} | ${'body/age must be >= 0'}
-  `('PUT / Não deve atualizar usuário e retornar BAD_REQUEST dado o payload: $payload', async ({payload, message}) => {
+  ${{ age: 26 }}               | ${'body must have required property \'name\''}
+  ${{ name: 'Rodrigo' }}       | ${'body must have required property \'age\''}
+  ${{ name: 'Edson', age: -1 }} | ${'body/age must be >= 0'}
+  `('PUT / Não deve atualizar usuário e retornar BAD_REQUEST dado o payload: $payload', async ({ payload, message }) => {
     const expected: ExpectType = {
       data: null,
       errors: [message],
@@ -151,11 +148,10 @@ describe('User', () => {
     const resp = await app.inject({
       method: 'PUT',
       url: `${BASE_URL}update`,
-      query: {id: '1000'},
+      query: { id: '1000' },
       payload,
     })
 
     expect(resp.json()).toStrictEqual(expected)
   })
-
 })

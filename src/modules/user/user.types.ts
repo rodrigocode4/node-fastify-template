@@ -1,4 +1,3 @@
-
 import { BaseEntity } from '../base/base.repository'
 
 export interface User extends BaseEntity {

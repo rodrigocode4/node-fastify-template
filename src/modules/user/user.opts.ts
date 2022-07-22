@@ -10,7 +10,7 @@ export const userGetOpts: Opts = {
   schema: {
     tags: ['User'],
     summary: 'Get user by name or all users',
-    security: [{'bearerAuth': []}],
+    security: [{ bearerAuth: [] }],
     querystring: {
       type: 'object',
       properties: {
@@ -122,16 +122,15 @@ export const userPostOpts: Opts = {
   },
 }
 
-
 export const userPutOpts: Opts = {
   preHandler: async (req, reply) => {
-    const {id} = <{id: number}>req.query
-    const {hasId} = await database<User>(table)
-      .count('id', {as: 'hasId'})
+    const { id } = <{id: number}>req.query
+    const { hasId } = await database<User>(table)
+      .count('id', { as: 'hasId' })
       .where({ id })
       .first<{hasId: number}>()
     if (!hasId) {
-      return reply.status(StatusCodes.BAD_REQUEST).send({data: null, errors: [messages.notFindById(id)]})
+      return reply.status(StatusCodes.BAD_REQUEST).send({ data: null, errors: [messages.notFindById(id)] })
     }
   },
   schema: {
@@ -188,4 +187,3 @@ export const userPutOpts: Opts = {
     },
   },
 }
-

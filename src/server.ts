@@ -6,7 +6,7 @@ const PORT = process.env.PORT || 3000
 const start = async () => {
   try {
     await app.listen({ port: PORT as number, host: '0.0.0.0' })
-    
+
     await database.on('start', (builder) => {
       app.log.debug(`SQL: ${builder.toQuery()}`)
     })
@@ -14,6 +14,7 @@ const start = async () => {
     app.log.info(`Docs listening at http://localhost:${PORT}/docs`)
     app.log.info('Server has started! 🚀')
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.log(err)
     app.log.error(err)
     process.exit(1)

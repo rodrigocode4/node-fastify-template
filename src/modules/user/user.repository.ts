@@ -3,7 +3,6 @@ import { User, UserPick } from './user.types'
 
 export const table = 'users'
 
-
 export default {
   get: (name?: string) => {
     const query = database<User>(table)
@@ -24,7 +23,7 @@ export default {
   update: async (user: UserPick & {id: number}) => {
     const id = await database<UserPick & {id: number, updatedAt: string}>(table)
       .where({ id: user.id })
-      .update({name: user.name, age: user.id, updatedAt: new Date().toISOString().replace('Z', '')})
+      .update({ name: user.name, age: user.id, updatedAt: new Date().toISOString().replace('Z', '') })
     return id ? { ...user } : false
   },
 }
