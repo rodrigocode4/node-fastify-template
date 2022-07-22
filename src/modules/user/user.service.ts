@@ -1,12 +1,19 @@
-import { ServiceResult, createErrorServiceResult, createSuccessServiceResult} from '../../infrastructure/result.service'
-import repository from './user.repository'
+import { 
+  ServiceResult, 
+  createErrorServiceResult, 
+  createSuccessServiceResult, 
+  createServiceResult
+} from '~/infrastructure/result.service'
 import messages from '~/infrastructure/messages'
+import repository from './user.repository'
 import { User, UserPick, RequiredUser } from './user.types'
 
 export default {
   get: async (name?: string): Promise<ServiceResult<User[]>> => {
     const users = await repository.get(name)
-    return createSuccessServiceResult<User[]>(users)
+    if (users.length) 
+      return createSuccessServiceResult<User[]>(users)
+    return createServiceResult<User[]>([messages.noDataFound], users)
   },
 
   getById: async (id: number): Promise<ServiceResult<User>> => {

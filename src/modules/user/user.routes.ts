@@ -1,7 +1,6 @@
 import { StatusCodes } from 'http-status-codes'
-import messages from '~/infrastructure/messages'
 import { App } from '../base/base.types'
-import { User, UserPick } from './user.types'
+import { UserPick } from './user.types'
 import { userGetOpts, userPostOpts, userPutOpts } from './user.opts'
 import service from './user.service'
 
@@ -10,16 +9,9 @@ export default async (app: App) => {
 
   app.get('/', userGetOpts, async (req, reply) => {
     const { name } = <{name: string}>req.query
-    const { data: users } = await service.get(name)
+    const { data: users, errors } = await service.get(name)
 
-    let errors: string[] | undefined
-    let status = StatusCodes.OK
-    const errorMessage = messages.listHasNoDataFound(users)
-
-    if(errorMessage) {
-      status = StatusCodes.PARTIAL_CONTENT
-      errors = [ errorMessage ]
-    }
+    const status = errors?.length ? StatusCodes.PARTIAL_CONTENT : StatusCodes.OK
     
     return reply.status(status).send({data: { users }, errors})
   })
