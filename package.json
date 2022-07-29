@@ -11,7 +11,7 @@
     "migrate:reset": "DEBUG=knex:query knex migrate:rollback",
     "test": "NODE_ENV=test jest --no-chache",
     "test:ci": "NODE_ENV=test DB_HOST=database jest --no-chache",
-    "lint": "eslint src --fix --ext .ts"
+    "lint": "eslint src migrations --fix --ext .ts"
   },
   "dependencies": {
     "@fastify/cors": "^8.0.0",
