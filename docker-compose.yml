@@ -3,7 +3,7 @@ version: "3.9"
 services:
   db:
     container_name: node_template
-    image: mysql:latest
+    image: public.ecr.aws/docker/library/mysql:latest
     platform: linux/x86_64
     restart: always
     ports:
