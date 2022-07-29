@@ -24,6 +24,6 @@ export default {
     const id = await database<UserPick & {id: number, updatedAt: string}>(table)
       .where({ id: user.id })
       .update({ name: user.name, age: user.id, updatedAt: new Date().toISOString().replace('Z', '') })
-    return id ? { ...user } : false
+    return { ...user, id }
   },
 }

@@ -35,7 +35,6 @@ export default {
 
   update: async (user: UserPick & {id: number}): Promise<ServiceResult<RequiredUser>> => {
     const updatedUser = await repository.update(user)
-    if (!updatedUser) return createErrorServiceResult(messages.notFindById(Number(updatedUser)))
     return createSuccessServiceResult<RequiredUser>(updatedUser)
   },
 }

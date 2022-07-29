@@ -8,6 +8,11 @@ export default () => ({
     age: faker.datatype.number(55),
   } as User,
 
+  withId(id: number) {
+    this.user.id = id
+    return this
+  },
+
   withName(name: string) {
     this.user.name = name
     return this

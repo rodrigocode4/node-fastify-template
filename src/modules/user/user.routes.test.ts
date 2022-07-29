@@ -5,7 +5,7 @@ import { User, UserPick } from './user.types'
 
 const BASE_URL = '/api/v1/user/'
 
-type ExpectType = { data: { user: User } | { users: User[] } | null, errors: string[] | null}
+type ExpectType = { data: { user: User } | { user: UserPick } | { users: User[] } | null, errors: string[] | null}
 
 describe('User', () => {
   test('GET / Deve retornar status PARTIAL_CONTENT e com lista vazia', async () => {
@@ -115,10 +115,10 @@ describe('User', () => {
   })
 
   test.each`
-  payload                    | message
+  payload                      | message
   ${{ age: 26 }}               | ${'body must have required property \'name\''}
   ${{ name: 'Rodrigo' }}       | ${'body must have required property \'age\''}
-  ${{ name: 'Edson', age: -1 }} | ${'body/age must be >= 0'}
+  ${{ name: 'Edson', age: -1 }}| ${'body/age must be >= 0'}
   `('POST / Não deve criar usuário e retornar BAD_REQUEST dado o payload: $payload', async ({ payload, message }) => {
     const expected: ExpectType = {
       data: null,
@@ -135,10 +135,10 @@ describe('User', () => {
   })
 
   test.each`
-  payload                    | message
+  payload                      | message
   ${{ age: 26 }}               | ${'body must have required property \'name\''}
   ${{ name: 'Rodrigo' }}       | ${'body must have required property \'age\''}
-  ${{ name: 'Edson', age: -1 }} | ${'body/age must be >= 0'}
+  ${{ name: 'Edson', age: -1 }}| ${'body/age must be >= 0'}
   `('PUT / Não deve atualizar usuário e retornar BAD_REQUEST dado o payload: $payload', async ({ payload, message }) => {
     const expected: ExpectType = {
       data: null,
@@ -152,6 +152,54 @@ describe('User', () => {
       payload,
     })
 
-    expect(resp.json()).toStrictEqual(expected)
+    expect(resp.json<ExpectType>()).toStrictEqual(expected)
+  })
+
+  test('PUT / Deve atualizar usuário, retornar CREATED e retornar os dados atualizados', async () => {
+    const user = await userBuilder().insert()
+
+    const expected: ExpectType = {
+      data: {
+        user: {
+          id: user.id,
+          name: user.name,
+          age: user.age,
+        },
+      },
+      errors: null,
+    }
+
+    const resp = await app.inject({
+      method: 'PUT',
+      url: `${BASE_URL}update`,
+      query: { id: user?.id as unknown as string },
+      payload: {
+        name: user.name,
+        age: user.age,
+      } as UserPick,
+    })
+
+    expect(resp.json<ExpectType>()).toStrictEqual(expected)
+  })
+
+  test('PUT / Não deve atualizar usuário e retornar BAD_REQUEST', async () => {
+    const user = userBuilder().withId(100).create()
+
+    const expected: ExpectType = {
+      data: null,
+      errors: [`Entity not found with id ${user.id}`],
+    }
+
+    const resp = await app.inject({
+      method: 'PUT',
+      url: `${BASE_URL}update`,
+      query: { id: user?.id as unknown as string },
+      payload: {
+        name: user.name,
+        age: user.age,
+      } as UserPick,
+    })
+
+    expect(resp.json<ExpectType>()).toStrictEqual(expected)
   })
 })
