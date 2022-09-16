@@ -18,10 +18,10 @@
 ## 💻 Pré-requisitos
 
 Antes de começar, verifique se você atendeu aos seguintes requisitos:
-* Node.js versão >= 16.15.0
-* Yarn versão >= 1.22.18
-* Docker versão >= 20.10.16
-* Docker Compose versão >= 2.7.0
+* Node.js >= 16.15.0
+* Yarn >= 1.22.18
+* Docker >= 20.10.16
+* Docker Compose >= 2.7.0
 
 
 ## ☕ Configurando variáveis de ambiente
