@@ -20,7 +20,7 @@ export const userGetOpts: Opts = {
     },
     response: {
       200: {
-        description: 'Succesful response',
+        description: 'Successful response',
         type: 'object',
         properties: {
           data: {
@@ -55,7 +55,7 @@ export const userGetOpts: Opts = {
 export const userGetByIdOpts: Opts = {
   schema: {
     tags: ['User'],
-    summary: 'Get user by name or all users',
+    summary: 'Get user by Id',
     security: [{ bearerAuth: [] }],
     params: {
       type: 'object',
@@ -67,7 +67,7 @@ export const userGetByIdOpts: Opts = {
     },
     response: {
       200: {
-        description: 'Succesful response',
+        description: 'Successful response',
         type: 'object',
         properties: {
           data: {
@@ -116,7 +116,7 @@ export const userPostOpts: Opts = {
     },
     response: {
       201: {
-        description: 'Succesful response',
+        description: 'Successful response',
         type: 'object',
         properties: {
           data: {
@@ -180,7 +180,7 @@ export const userPutOpts: Opts = {
     },
     response: {
       201: {
-        description: 'Succesful response',
+        description: 'Successful response',
         type: 'object',
         properties: {
           data: {
