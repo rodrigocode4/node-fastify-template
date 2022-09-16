@@ -26,11 +26,11 @@ const insert = async (user: UserPick): Promise<ServiceResult<{user: UserPick}>> 
   return createSuccessServiceResult({ user: createdUser })
 }
 
-const deleteById = async (id: number): Promise<ServiceResult<number>> => {
+const deleteById = async (id: number): Promise<ServiceResult<{ id: number }>> => {
   const userExists = await existById(id)
   if (!userExists) return createErrorServiceResult(messages.notFindById(id))
   await repository.deleteById(id)
-  return createSuccessServiceResult<number>(id)
+  return createSuccessServiceResult<{ id: number }>({ id })
 }
 
 const update = async (user: UserPick & { id: number }): Promise<ServiceResult<{ user: RequiredUser }>> => {
