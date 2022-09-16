@@ -7,7 +7,8 @@ export default {
     '<rootDir>/src/infrastructure/*',
     '<rootDir>/src/modules/base/*',
     '<rootDir>/src/server.ts',
-    '<rootDir>/src/index.ts'
+    '<rootDir>/src/index.ts',
+    '<rootDir>/src/app.ts'
   ],
   coverageProvider: 'v8',
   moduleNameMapper: { '~/(.*)': '<rootDir>/src/$1' },
