@@ -8,11 +8,9 @@ const BASE_URL = '/api/v1/user/'
 type ExpectType = { data: { user: User } | { user: UserPick } | { users: User[] } | null, errors: string[] | null}
 
 describe('User', () => {
-  test('GET / Deve retornar status PARTIAL_CONTENT e com lista vazia', async () => {
+  test('GET / Deve retornar status NOT_FOUND e sem nenhum dado', async () => {
     const expected: ExpectType = {
-      data: {
-        users: [],
-      },
+      data: null,
       errors: ['No data found'],
     }
 
@@ -21,8 +19,8 @@ describe('User', () => {
       url: BASE_URL,
     })
 
-    expect(resp.statusCode).toBe(StatusCodes.PARTIAL_CONTENT)
-    expect(resp.json()).toStrictEqual(expected)
+    expect(resp.statusCode).toBe(StatusCodes.NOT_FOUND)
+    expect(resp.json<ExpectType>()).toStrictEqual(expected)
   })
 
   test('GET / Deve retornar status OK e com lista de usuários', async () => {
@@ -71,7 +69,7 @@ describe('User', () => {
     '*', '123',
     '(asd)', '[asd]',
     'asrr d2d', '3aasd]'
-  ])('GET / Deve retornar status BAD_REQUEST ao passar quary inválida: %s', async (queryParam) => {
+  ])('GET / Deve retornar status BAD_REQUEST ao passar query inválida: %s', async (queryParam) => {
     const expected: ExpectType = {
       data: null,
       errors: ['querystring/name must match pattern "^((?!d)[a-zA-Z\\s]+)*$"'],
