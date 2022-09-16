@@ -206,3 +206,40 @@ export const userPutOpts: Opts = {
     },
   },
 }
+
+export const userDeleteByIdOpts: Opts = {
+  schema: {
+    tags: ['User'],
+    summary: 'Delete user by Id',
+    security: [{ bearerAuth: [] }],
+    params: {
+      type: 'object',
+      properties: {
+        id: {
+          type: 'integer',
+        },
+      },
+    },
+    response: {
+      200: {
+        description: 'Successful response',
+        type: 'object',
+        properties: {
+          data: {
+            type: 'object',
+            properties: {
+              id: {
+                type: 'integer',
+              },
+            },
+          },
+          errors: {
+            type: 'null',
+            default: null,
+          },
+        },
+      },
+      ...errorSchema(404),
+    },
+  },
+}
