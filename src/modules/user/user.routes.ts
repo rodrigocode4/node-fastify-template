@@ -2,6 +2,7 @@ import { StatusCodes } from 'http-status-codes'
 import { App } from '../base/base.types'
 import { UserPick } from './user.types'
 import {
+  userDeleteByIdOpts,
   userGetByIdOpts, userGetOpts, userPostOpts, userPutOpts
 } from './user.opts'
 import service from './user.service'
@@ -44,5 +45,17 @@ export default async (app: App) => {
 
     const { data, errors } = await service.update({ id, ...userProps })
     return reply.status(StatusCodes.CREATED).send({ data, errors })
+  })
+
+  app.delete('/delete/:id', userDeleteByIdOpts, async (req, reply) => {
+    const { id } = <{id: number}>req.params
+    const { data, errors } = await service.deleteById(id)
+
+    let status = StatusCodes.OK
+    if (errors) {
+      status = StatusCodes.NOT_FOUND
+    }
+
+    return reply.status(status).send({ data, errors })
   })
 }
