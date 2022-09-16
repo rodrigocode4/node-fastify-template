@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker'
 import { StatusCodes } from 'http-status-codes'
 import app from '~/app'
 import userBuilder from '~/infrastructure/builders/user.builder'
@@ -198,6 +199,82 @@ describe('User', () => {
       } as UserPick,
     })
 
+    expect(resp.json<ExpectType>()).toStrictEqual(expected)
+  })
+
+  test('GET / Deve retornar status OK e apenas o usuário buscado por Id', async () => {
+    await userBuilder().insert()
+    const user = await userBuilder().insert()
+
+    const expected: ExpectType = {
+      data: {
+        user,
+      },
+      errors: null,
+    }
+
+    const resp = await app.inject({
+      method: 'GET',
+      url: `${BASE_URL}${user.id}`,
+    })
+
+    expect(resp.statusCode).toBe(StatusCodes.OK)
+    expect(resp.json<ExpectType>()).toStrictEqual(expected)
+  })
+
+  test('GET / Deve retornar status NOT_FOUND e apenas o usuário buscado por Id', async () => {
+    await userBuilder().insert()
+    const Id = faker.datatype.number(55)
+
+    const expected: ExpectType = {
+      data: null,
+      errors: [`Entity not found with id ${Id}`],
+    }
+
+    const resp = await app.inject({
+      method: 'GET',
+      url: `${BASE_URL}${Id}`,
+    })
+
+    expect(resp.statusCode).toBe(StatusCodes.NOT_FOUND)
+    expect(resp.json<ExpectType>()).toStrictEqual(expected)
+  })
+
+  test('GET / Deve retornar status OK e apenas o usuário buscado por Id', async () => {
+    await userBuilder().insert()
+    const user = await userBuilder().insert()
+
+    const expected: ExpectType = {
+      data: {
+        user,
+      },
+      errors: null,
+    }
+
+    const resp = await app.inject({
+      method: 'GET',
+      url: `${BASE_URL}${user.id}`,
+    })
+
+    expect(resp.statusCode).toBe(StatusCodes.OK)
+    expect(resp.json<ExpectType>()).toStrictEqual(expected)
+  })
+
+  test('GET / Deve retornar status NOT_FOUND e apenas o usuário buscado por Id', async () => {
+    await userBuilder().insert()
+    const Id = faker.datatype.number(55)
+
+    const expected: ExpectType = {
+      data: null,
+      errors: [`Entity not found with id ${Id}`],
+    }
+
+    const resp = await app.inject({
+      method: 'GET',
+      url: `${BASE_URL}${Id}`,
+    })
+
+    expect(resp.statusCode).toBe(StatusCodes.NOT_FOUND)
     expect(resp.json<ExpectType>()).toStrictEqual(expected)
   })
 })
