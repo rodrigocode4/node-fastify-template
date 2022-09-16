@@ -1,10 +1,8 @@
 import { StatusCodes } from 'http-status-codes'
-import database from '~/infrastructure/database/database.conn'
 import errorSchema from '~/infrastructure/error/error.schema'
 import messages from '~/infrastructure/messages'
 import { Opts } from '../base/base.types'
-import { table } from './user.repository'
-import { User } from './user.types'
+import userService from './user.service'
 
 export const userGetOpts: Opts = {
   schema: {
@@ -22,7 +20,7 @@ export const userGetOpts: Opts = {
     },
     response: {
       200: {
-        description: 'Succesful response',
+        description: 'Successful response',
         type: 'object',
         properties: {
           data: {
@@ -49,28 +47,51 @@ export const userGetOpts: Opts = {
           },
         },
       },
-      206: {
-        description: 'Partial content response',
+      ...errorSchema(404),
+    },
+  },
+}
+
+export const userGetByIdOpts: Opts = {
+  schema: {
+    tags: ['User'],
+    summary: 'Get user by Id',
+    security: [{ bearerAuth: [] }],
+    params: {
+      type: 'object',
+      properties: {
+        id: {
+          type: 'integer',
+        },
+      },
+    },
+    response: {
+      200: {
+        description: 'Successful response',
         type: 'object',
         properties: {
           data: {
             type: 'object',
             properties: {
-              users: {
-                type: 'array',
-                default: [],
+              user: {
+                type: 'object',
+                properties: {
+                  id: { type: 'integer' },
+                  name: { type: 'string' },
+                  age: { type: 'number' },
+                  createdAt: { type: 'string' },
+                  updatedAt: { type: 'string' },
+                },
               },
             },
           },
           errors: {
-            type: 'array',
-            items: {
-              type: 'string',
-            },
+            type: 'null',
+            default: null,
           },
         },
       },
-      ...errorSchema([404, 500]),
+      ...errorSchema(404),
     },
   },
 }
@@ -95,7 +116,7 @@ export const userPostOpts: Opts = {
     },
     response: {
       201: {
-        description: 'Succesful response',
+        description: 'Successful response',
         type: 'object',
         properties: {
           data: {
@@ -123,15 +144,13 @@ export const userPostOpts: Opts = {
 }
 
 export const userPutOpts: Opts = {
-  preHandler: async (req, reply) => {
+  preHandler: async (req, reply, done) => {
     const { id } = <{id: number}>req.query
-    const { hasId } = await database<User>(table)
-      .count('id', { as: 'hasId' })
-      .where({ id })
-      .first<{hasId: number}>()
+    const hasId = await userService.existById(id)
     if (!hasId) {
       return reply.status(StatusCodes.BAD_REQUEST).send({ data: null, errors: [messages.notFindById(id)] })
     }
+    return done()
   },
   schema: {
     tags: ['User'],
@@ -161,7 +180,7 @@ export const userPutOpts: Opts = {
     },
     response: {
       201: {
-        description: 'Succesful response',
+        description: 'Successful response',
         type: 'object',
         properties: {
           data: {
@@ -184,6 +203,43 @@ export const userPutOpts: Opts = {
         },
       },
       ...errorSchema(),
+    },
+  },
+}
+
+export const userDeleteByIdOpts: Opts = {
+  schema: {
+    tags: ['User'],
+    summary: 'Delete user by Id',
+    security: [{ bearerAuth: [] }],
+    params: {
+      type: 'object',
+      properties: {
+        id: {
+          type: 'integer',
+        },
+      },
+    },
+    response: {
+      200: {
+        description: 'Successful response',
+        type: 'object',
+        properties: {
+          data: {
+            type: 'object',
+            properties: {
+              id: {
+                type: 'integer',
+              },
+            },
+          },
+          errors: {
+            type: 'null',
+            default: null,
+          },
+        },
+      },
+      ...errorSchema(404),
     },
   },
 }

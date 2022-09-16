@@ -15,4 +15,4 @@ const schema = {
   },
 }
 
-export default (codes = [400, 500]) => codes.reduce((acc, crr) => ({ ...acc, [crr]: schema }), {})
+export default (...codes: number[]) => [400, 500].concat(codes).reduce((acc, crr) => ({ ...acc, [crr]: schema }), {})

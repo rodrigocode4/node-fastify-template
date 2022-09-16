@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker'
 import { StatusCodes } from 'http-status-codes'
 import app from '~/app'
 import userBuilder from '~/infrastructure/builders/user.builder'
@@ -5,14 +6,12 @@ import { User, UserPick } from './user.types'
 
 const BASE_URL = '/api/v1/user/'
 
-type ExpectType = { data: { user: User } | { users: User[] } | null, errors: string[] | null}
+type ExpectType = { data: { user: User } | { user: UserPick } | { users: User[] } | { id: number } | null, errors: string[] | null}
 
 describe('User', () => {
-  test('GET / Deve retornar status PARTIAL_CONTENT e com lista vazia', async () => {
+  test('GET / Deve retornar status NOT_FOUND e sem nenhum dado', async () => {
     const expected: ExpectType = {
-      data: {
-        users: [],
-      },
+      data: null,
       errors: ['No data found'],
     }
 
@@ -21,8 +20,8 @@ describe('User', () => {
       url: BASE_URL,
     })
 
-    expect(resp.statusCode).toBe(StatusCodes.PARTIAL_CONTENT)
-    expect(resp.json()).toStrictEqual(expected)
+    expect(resp.statusCode).toBe(StatusCodes.NOT_FOUND)
+    expect(resp.json<ExpectType>()).toStrictEqual(expected)
   })
 
   test('GET / Deve retornar status OK e com lista de usuários', async () => {
@@ -71,7 +70,7 @@ describe('User', () => {
     '*', '123',
     '(asd)', '[asd]',
     'asrr d2d', '3aasd]'
-  ])('GET / Deve retornar status BAD_REQUEST ao passar quary inválida: %s', async (queryParam) => {
+  ])('GET / Deve retornar status BAD_REQUEST ao passar query inválida: %s', async (queryParam) => {
     const expected: ExpectType = {
       data: null,
       errors: ['querystring/name must match pattern "^((?!d)[a-zA-Z\\s]+)*$"'],
@@ -115,10 +114,10 @@ describe('User', () => {
   })
 
   test.each`
-  payload                    | message
+  payload                      | message
   ${{ age: 26 }}               | ${'body must have required property \'name\''}
   ${{ name: 'Rodrigo' }}       | ${'body must have required property \'age\''}
-  ${{ name: 'Edson', age: -1 }} | ${'body/age must be >= 0'}
+  ${{ name: 'Edson', age: -1 }}| ${'body/age must be >= 0'}
   `('POST / Não deve criar usuário e retornar BAD_REQUEST dado o payload: $payload', async ({ payload, message }) => {
     const expected: ExpectType = {
       data: null,
@@ -135,10 +134,10 @@ describe('User', () => {
   })
 
   test.each`
-  payload                    | message
+  payload                      | message
   ${{ age: 26 }}               | ${'body must have required property \'name\''}
   ${{ name: 'Rodrigo' }}       | ${'body must have required property \'age\''}
-  ${{ name: 'Edson', age: -1 }} | ${'body/age must be >= 0'}
+  ${{ name: 'Edson', age: -1 }}| ${'body/age must be >= 0'}
   `('PUT / Não deve atualizar usuário e retornar BAD_REQUEST dado o payload: $payload', async ({ payload, message }) => {
     const expected: ExpectType = {
       data: null,
@@ -152,6 +151,128 @@ describe('User', () => {
       payload,
     })
 
-    expect(resp.json()).toStrictEqual(expected)
+    expect(resp.json<ExpectType>()).toStrictEqual(expected)
+  })
+
+  test('PUT / Deve atualizar usuário, retornar CREATED e retornar os dados atualizados', async () => {
+    const user = await userBuilder().insert()
+
+    const expected: ExpectType = {
+      data: {
+        user: {
+          id: user.id,
+          name: user.name,
+          age: user.age,
+        },
+      },
+      errors: null,
+    }
+
+    const resp = await app.inject({
+      method: 'PUT',
+      url: `${BASE_URL}update`,
+      query: { id: user?.id as unknown as string },
+      payload: {
+        name: user.name,
+        age: user.age,
+      } as UserPick,
+    })
+
+    expect(resp.json<ExpectType>()).toStrictEqual(expected)
+  })
+
+  test('PUT / Não deve atualizar usuário e retornar BAD_REQUEST', async () => {
+    const user = userBuilder().withId(100).create()
+
+    const expected: ExpectType = {
+      data: null,
+      errors: [`Entity not found with id ${user.id}`],
+    }
+
+    const resp = await app.inject({
+      method: 'PUT',
+      url: `${BASE_URL}update`,
+      query: { id: user?.id as unknown as string },
+      payload: {
+        name: user.name,
+        age: user.age,
+      } as UserPick,
+    })
+
+    expect(resp.json<ExpectType>()).toStrictEqual(expected)
+  })
+
+  test('GET / Deve retornar status OK e apenas o usuário buscado por Id', async () => {
+    await userBuilder().insert()
+    const user = await userBuilder().insert()
+
+    const expected: ExpectType = {
+      data: {
+        user,
+      },
+      errors: null,
+    }
+
+    const resp = await app.inject({
+      method: 'GET',
+      url: `${BASE_URL}${user.id}`,
+    })
+
+    expect(resp.statusCode).toBe(StatusCodes.OK)
+    expect(resp.json<ExpectType>()).toStrictEqual(expected)
+  })
+
+  test('GET / Deve retornar status NOT_FOUND e erro de entidade não encontrada pelo Id passado', async () => {
+    const Id = faker.datatype.number(55)
+
+    const expected: ExpectType = {
+      data: null,
+      errors: [`Entity not found with id ${Id}`],
+    }
+
+    const resp = await app.inject({
+      method: 'GET',
+      url: `${BASE_URL}${Id}`,
+    })
+
+    expect(resp.statusCode).toBe(StatusCodes.NOT_FOUND)
+    expect(resp.json<ExpectType>()).toStrictEqual(expected)
+  })
+
+  test('DELETE / Deve retornar status OK e apenas o usuário buscado por Id', async () => {
+    await userBuilder().insert()
+    const user = await userBuilder().insert()
+
+    const expected: ExpectType = {
+      data: {
+        id: Number(user.id),
+      },
+      errors: null,
+    }
+
+    const resp = await app.inject({
+      method: 'DELETE',
+      url: `${BASE_URL}delete/${user.id}`,
+    })
+
+    expect(resp.statusCode).toBe(StatusCodes.OK)
+    expect(resp.json<ExpectType>()).toStrictEqual(expected)
+  })
+
+  test('DELETE / Deve retornar status NOT_FOUND e erro de entidade não encontrada pelo Id passado', async () => {
+    const Id = faker.datatype.number(55)
+
+    const expected: ExpectType = {
+      data: null,
+      errors: [`Entity not found with id ${Id}`],
+    }
+
+    const resp = await app.inject({
+      method: 'DELETE',
+      url: `${BASE_URL}delete/${Id}`,
+    })
+
+    expect(resp.statusCode).toBe(StatusCodes.NOT_FOUND)
+    expect(resp.json<ExpectType>()).toStrictEqual(expected)
   })
 })

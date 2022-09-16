@@ -1,12 +1,14 @@
-
 export default {
   clearMocks: true,
   collectCoverage: true,
-  collectCoverageFrom: ['<rootDir>/src/**/*.ts'],
+  collectCoverageFrom: ['<rootDir>/src/**/*.ts', '!<rootDir>/src/**/*types.ts'],
   coverageDirectory: 'coverage',
   coveragePathIgnorePatterns: [
     '<rootDir>/src/infrastructure/*',
-    '<rootDir>/src/server.ts'
+    '<rootDir>/src/modules/base/*',
+    '<rootDir>/src/server.ts',
+    '<rootDir>/src/index.ts',
+    '<rootDir>/src/app.ts'
   ],
   coverageProvider: 'v8',
   moduleNameMapper: { '~/(.*)': '<rootDir>/src/$1' },

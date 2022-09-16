@@ -1,41 +1,48 @@
 import {
   ServiceResult,
   createErrorServiceResult,
-  createSuccessServiceResult,
-  createServiceResult
+  createSuccessServiceResult
 } from '~/infrastructure/result.service'
 import messages from '~/infrastructure/messages'
 import repository from './user.repository'
 import { User, UserPick, RequiredUser } from './user.types'
 
+const existById = async (id: number) => repository.existById(id)
+
+const get = async (name?: string): Promise<ServiceResult<{ users: User[] }>> => {
+  const users = await repository.get(name)
+  if (users.length) return createSuccessServiceResult({ users })
+  return createErrorServiceResult(messages.noDataFound)
+}
+
+const getById = async (id: number): Promise<ServiceResult<{user: User}>> => {
+  const user = await repository.getById(id)
+  if (!user) return createErrorServiceResult(messages.notFindById(id))
+  return createSuccessServiceResult<{ user: User}>({ user })
+}
+
+const insert = async (user: UserPick): Promise<ServiceResult<{user: UserPick}>> => {
+  const createdUser = await repository.insert(user)
+  return createSuccessServiceResult({ user: createdUser })
+}
+
+const deleteById = async (id: number): Promise<ServiceResult<{ id: number }>> => {
+  const userExists = await existById(id)
+  if (!userExists) return createErrorServiceResult(messages.notFindById(id))
+  await repository.deleteById(id)
+  return createSuccessServiceResult<{ id: number }>({ id })
+}
+
+const update = async (user: UserPick & { id: number }): Promise<ServiceResult<{ user: RequiredUser }>> => {
+  const updatedUser = await repository.update(user)
+  return createSuccessServiceResult({ user: updatedUser })
+}
+
 export default {
-  get: async (name?: string): Promise<ServiceResult<User[]>> => {
-    const users = await repository.get(name)
-    if (users.length) { return createSuccessServiceResult<User[]>(users) }
-    return createServiceResult<User[]>([messages.noDataFound], users)
-  },
-
-  getById: async (id: number): Promise<ServiceResult<User>> => {
-    const user = await repository.getById(id)
-    if (!user) return createErrorServiceResult(messages.notFindById(id))
-    return createSuccessServiceResult<User>(user)
-  },
-
-  insert: async (user: UserPick): Promise<ServiceResult<UserPick>> => {
-    const createdUser = await repository.insert(user)
-    return createSuccessServiceResult<UserPick>(createdUser)
-  },
-
-  delete: async (id: number): Promise<ServiceResult<number>> => {
-    const userExists = await repository.getById(id)
-    if (!userExists) return createErrorServiceResult(messages.notFindById(id))
-    await repository.delete(id)
-    return createSuccessServiceResult<number>(id)
-  },
-
-  update: async (user: UserPick & {id: number}): Promise<ServiceResult<RequiredUser>> => {
-    const updatedUser = await repository.update(user)
-    if (!updatedUser) return createErrorServiceResult(messages.notFindById(Number(updatedUser)))
-    return createSuccessServiceResult<RequiredUser>(updatedUser)
-  },
+  get,
+  getById,
+  insert,
+  deleteById,
+  update,
+  existById,
 }
