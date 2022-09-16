@@ -6,7 +6,7 @@ import { User, UserPick } from './user.types'
 
 const BASE_URL = '/api/v1/user/'
 
-type ExpectType = { data: { user: User } | { user: UserPick } | { users: User[] } | null, errors: string[] | null}
+type ExpectType = { data: { user: User } | { user: UserPick } | { users: User[] } | { id: number } | null, errors: string[] | null}
 
 describe('User', () => {
   test('GET / Deve retornar status NOT_FOUND e sem nenhum dado', async () => {
@@ -222,8 +222,7 @@ describe('User', () => {
     expect(resp.json<ExpectType>()).toStrictEqual(expected)
   })
 
-  test('GET / Deve retornar status NOT_FOUND e apenas o usuário buscado por Id', async () => {
-    await userBuilder().insert()
+  test('GET / Deve retornar status NOT_FOUND e erro de entidade não encontrada pelo Id passado', async () => {
     const Id = faker.datatype.number(55)
 
     const expected: ExpectType = {
@@ -240,28 +239,27 @@ describe('User', () => {
     expect(resp.json<ExpectType>()).toStrictEqual(expected)
   })
 
-  test('GET / Deve retornar status OK e apenas o usuário buscado por Id', async () => {
+  test('DELETE / Deve retornar status OK e apenas o usuário buscado por Id', async () => {
     await userBuilder().insert()
     const user = await userBuilder().insert()
 
     const expected: ExpectType = {
       data: {
-        user,
+        id: Number(user.id),
       },
       errors: null,
     }
 
     const resp = await app.inject({
-      method: 'GET',
-      url: `${BASE_URL}${user.id}`,
+      method: 'DELETE',
+      url: `${BASE_URL}delete/${user.id}`,
     })
 
     expect(resp.statusCode).toBe(StatusCodes.OK)
     expect(resp.json<ExpectType>()).toStrictEqual(expected)
   })
 
-  test('GET / Deve retornar status NOT_FOUND e apenas o usuário buscado por Id', async () => {
-    await userBuilder().insert()
+  test('DELETE / Deve retornar status NOT_FOUND e erro de entidade não encontrada pelo Id passado', async () => {
     const Id = faker.datatype.number(55)
 
     const expected: ExpectType = {
@@ -270,8 +268,8 @@ describe('User', () => {
     }
 
     const resp = await app.inject({
-      method: 'GET',
-      url: `${BASE_URL}${Id}`,
+      method: 'DELETE',
+      url: `${BASE_URL}delete/${Id}`,
     })
 
     expect(resp.statusCode).toBe(StatusCodes.NOT_FOUND)
