@@ -10,7 +10,7 @@ const start = async () => {
     await database.on('start', (builder) => {
       app.log.debug(`SQL: ${builder.toQuery()}`)
     })
-
+    console.log(app.printRoutes())
     app.log.info(`Docs listening at http://localhost:${PORT}/docs`)
     app.log.info('Server has started! 🚀')
   } catch (err) {
