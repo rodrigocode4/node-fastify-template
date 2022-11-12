@@ -1,7 +1,7 @@
 import { FastifyDynamicSwaggerOptions } from '@fastify/swagger'
+import { FastifySwaggerUiOptions } from '@fastify/swagger-ui'
 
 const swaggerOpts: FastifyDynamicSwaggerOptions = {
-  routePrefix: 'docs',
   mode: 'dynamic',
   openapi: {
     info: {
@@ -20,9 +20,16 @@ const swaggerOpts: FastifyDynamicSwaggerOptions = {
         },
       },
     },
+
   },
   hideUntagged: true,
-  exposeRoute: true,
 }
 
-export default swaggerOpts
+const swaggerUiOpts: FastifySwaggerUiOptions = {
+  routePrefix: '/docs',
+  uiConfig: {
+    deepLinking: false,
+  },
+}
+
+export default { swaggerOpts, swaggerUiOpts }
