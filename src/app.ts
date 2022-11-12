@@ -1,5 +1,5 @@
 import Fastify from 'fastify'
-import swaggerOpts from './infrastructure/swagger/swagger.opts'
+import swagger from './infrastructure/swagger/swagger.opts'
 import handler from './infrastructure/handler'
 import errorHook from './infrastructure/error/error.hook'
 import loggerOpts from './infrastructure/logger/logger.opts'
@@ -16,6 +16,7 @@ export default app
   .register(require('@fastify/response-validation'))
   .register(require('@fastify/cors'))
   .register(require('@fastify/helmet'))
-  .register(require('@fastify/swagger'), swaggerOpts)
+  .register(require('@fastify/swagger'), swagger.swaggerOpts)
+  .register(require('@fastify/swagger-ui'), swagger.swaggerUiOpts)
   .register(require('./infrastructure/dotenv'))
   .register(require('./routes'))
