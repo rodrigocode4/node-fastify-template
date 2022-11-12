@@ -14,5 +14,5 @@ export default {
   moduleNameMapper: { '~/(.*)': '<rootDir>/src/$1' },
   roots: ['<rootDir>/src'],
   setupFilesAfterEnv: ['<rootDir>/src/infrastructure/test.setup.ts'],
-  transform: { '.+\\.ts$': 'ts-jest' },
+  transform: { '.+\\.ts$': '@swc/jest' },
 }
