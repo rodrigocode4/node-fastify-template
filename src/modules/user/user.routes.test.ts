@@ -2,11 +2,18 @@ import { faker } from '@faker-js/faker'
 import { StatusCodes } from 'http-status-codes'
 import app from '~/app'
 import userBuilder from '~/infrastructure/builders/user.builder'
-import { User, UserPick } from './user.types'
+import { User } from './user.types'
 
 const BASE_URL = '/api/v1/user/'
 
-type ExpectType = { data: { user: User } | { user: UserPick } | { users: User[] } | { id: number } | null, errors: string[] | null}
+type ExpectType = {
+  data: { user: User } |
+  { user: User & { id: number } } |
+  { users: User[] } |
+  { id: number } |
+  null,
+  errors: string[] | null
+}
 
 describe('User', () => {
   test('GET / Deve retornar status NOT_FOUND e sem nenhum dado', async () => {
@@ -101,7 +108,7 @@ describe('User', () => {
       url: `${BASE_URL}new`,
       payload: {
         ...user,
-      } as UserPick,
+      } as User,
     })
 
     expect(resp.statusCode).toEqual(StatusCodes.CREATED)
@@ -175,7 +182,7 @@ describe('User', () => {
       payload: {
         name: user.name,
         age: user.age,
-      } as UserPick,
+      } as User,
     })
 
     expect(resp.json<ExpectType>()).toStrictEqual(expected)
@@ -192,11 +199,11 @@ describe('User', () => {
     const resp = await app.inject({
       method: 'PUT',
       url: `${BASE_URL}update`,
-      query: { id: user?.id as unknown as string },
+      query: { id: `${user?.id}` },
       payload: {
         name: user.name,
         age: user.age,
-      } as UserPick,
+      } as User,
     })
 
     expect(resp.json<ExpectType>()).toStrictEqual(expected)
