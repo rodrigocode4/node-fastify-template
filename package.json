@@ -4,13 +4,13 @@
   "main": "dist/index.js",
   "license": "MIT",
   "scripts": {
-    "start": "DEBUG=1 ts-node-dev --respawn --transpile-only -r tsconfig-paths/register ./src/index.ts",
+    "start": "NODE_ENV=dev ts-node-dev --respawn --transpile-only -r tsconfig-paths/register ./src/index.ts",
     "build": "rm -rf ./dist && tsc --project tsconfig.build.json && tscpaths -p tsconfig.build.json -s ./src -o ./dist",
     "server": "node ./dist/index.js",
-    "migrate:run": "DEBUG=knex:query knex migrate:latest",
-    "migrate:reset": "DEBUG=knex:query knex migrate:rollback",
-    "test": "NODE_ENV=test jest --no-chache",
-    "test:ci": "NODE_ENV=test DB_HOST=database jest --no-chache",
+    "migrate:run": "prisma migrate dev",
+    "migrate:reset": "prisma migrate reset",
+    "test": "NODE_ENV=test dotenv -e .env.test jest --no-chache",
+    "test:ci": "NODE_ENV=test dotenv -e .env.ci jest --no-chache",
     "lint": "eslint src migrations --fix --ext .ts"
   },
   "dependencies": {
@@ -19,11 +19,10 @@
     "@fastify/response-validation": "^2.1.0",
     "@fastify/swagger": "^8.1.0",
     "@fastify/swagger-ui": "^1.2.0",
+    "@prisma/client": "^4.6.1",
+    "ajv-formats": "2.1.1",
     "fastify": "^4.9.2",
     "http-status-codes": "^2.2.0",
-    "knex": "^2.3.0",
-    "knex-stringcase": "^1.4.6",
-    "mysql2": "^2.3.3",
     "pino-pretty": "^9.1.1"
   },
   "devDependencies": {
@@ -38,14 +37,19 @@
     "@typescript-eslint/eslint-plugin": "^5.30.7",
     "@typescript-eslint/parser": "^5.30.7",
     "dotenv": "^16.0.1",
+    "dotenv-cli": "^6.0.0",
     "eslint": "^7.32.0 || ^8.2.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.25.2",
     "husky": "^8.0.1",
     "jest": "^29.3.1",
+    "prisma": "^4.6.1",
     "ts-node-dev": "^2.0.0",
     "tsconfig-paths": "^4.0.0",
     "tscpaths": "^0.0.9",
     "typescript": "^4.7.4"
+  },
+  "prisma": {
+    "schema": "src/infrastructure/database/schema.prisma"
   }
 }

@@ -10,7 +10,7 @@ const loggerOpts: LoggerOptions = {
       colorize: true,
     } as PrettyOptions,
   },
-  level: process.env.DEBUG ? 'debug' : 'info',
+  level: process.env.NODE_ENV === 'dev' ? 'debug' : 'info',
 }
 
 export default loggerOpts

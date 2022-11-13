@@ -34,8 +34,8 @@ export const userGetOpts: Opts = {
                     id: { type: 'integer' },
                     name: { type: 'string' },
                     age: { type: 'number' },
-                    createdAt: { type: 'string' },
-                    updatedAt: { type: 'string' },
+                    createdAt: { type: 'string', format: 'date-time' },
+                    updatedAt: { type: 'string', format: 'date-time' },
                   },
                 },
               },
@@ -79,8 +79,8 @@ export const userGetByIdOpts: Opts = {
                   id: { type: 'integer' },
                   name: { type: 'string' },
                   age: { type: 'number' },
-                  createdAt: { type: 'string' },
-                  updatedAt: { type: 'string' },
+                  createdAt: { type: 'string', format: 'date-time' },
+                  updatedAt: { type: 'string', format: 'date-time' },
                 },
               },
             },
@@ -145,7 +145,7 @@ export const userPostOpts: Opts = {
 
 export const userPutOpts: Opts = {
   preHandler: async (req, reply, done) => {
-    const { id } = <{id: number}>req.query
+    const { id } = <{ id: number }>req.query
     const hasId = await userService.existById(id)
     if (!hasId) {
       return reply.status(StatusCodes.BAD_REQUEST).send({ data: null, errors: [messages.notFindById(id)] })

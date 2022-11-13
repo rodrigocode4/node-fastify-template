@@ -1,29 +1,21 @@
-import knex from 'knex'
+import util from 'util'
+import childProcess from 'child_process'
 import app from '../app'
-import dotenvLoad from './dotenv.load'
-import database, { getConfig } from './database/database.conn'
+import db from '~/infrastructure/database/prisma.client'
 
-const tables = [
-  'users'
-]
+const exec = util.promisify(childProcess.exec)
 
 const setup = async () => {
-  await dotenvLoad()
-
-  const knexWithoutDb = knex(getConfig(true))
-  await knexWithoutDb.raw(`create database if not exists ${process.env.DB_NAME};`)
-  await knexWithoutDb.destroy()
-
-  await database.migrate.latest()
+  await exec('./node_modules/.bin/dotenv -e .env.test ./node_modules/.bin/prisma migrate dev --force')
 }
 
 const teardown = async () => {
-  await database.raw(`drop database ${process.env.DB_NAME};`)
-  await database.destroy()
+  await exec(`echo 'drop database ${process.env.DATABASE_URL?.split('/').at(-1)};'`
+    + ` | ./node_modules/.bin/prisma db execute --stdin --url=${process.env.DATABASE_URL}`)
 }
 
 const truncateTables = async () => {
-  await Promise.all(tables.map((table) => database(table).truncate()))
+  await db.$transaction([db.user.deleteMany()])
 }
 
 beforeEach(async () => {
