@@ -3,7 +3,7 @@ import db from '~/infrastructure/database/prisma.client'
 
 const existById = async (id: number) => !!(await db.user.count({ where: { id } }))
 
-const get = (name?: string) => {
+const get = async (name?: string) => {
   let usersDb = null
 
   if (!name) {
@@ -21,7 +21,7 @@ const get = (name?: string) => {
   return usersDb
 }
 
-const getById = (id: number) => db.user.findFirst({ where: { id } })
+const getById = async (id: number) => db.user.findFirst({ where: { id } })
 
 const insert = async (user: User) => db.user.create({ data: { ...user } })
 
