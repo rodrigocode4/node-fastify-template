@@ -5,7 +5,7 @@ export default {
   coverageDirectory: 'coverage',
   coveragePathIgnorePatterns: [
     '<rootDir>/src/infrastructure/*',
-    '<rootDir>/src/modules/base/*',
+    '<rootDir>/src/features/base/*',
     '<rootDir>/src/server.ts',
     '<rootDir>/src/index.ts',
     '<rootDir>/src/app.ts'

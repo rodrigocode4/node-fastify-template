@@ -25,7 +25,7 @@ beforeEach(async () => {
 
 beforeAll(async () => {
   await setup()
-})
+}, 30_000)
 
 afterAll(async () => {
   await teardown()
