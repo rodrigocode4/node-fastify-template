@@ -10,7 +10,7 @@
     "migrate:run": "prisma migrate dev",
     "migrate:reset": "prisma migrate reset",
     "test": "NODE_ENV=test dotenv -e .env.test jest --no-chache",
-    "test:ci": "NODE_ENV=test dotenv -e .env.test jest --no-chache",
+    "test:ci": "NODE_ENV=test dotenv -e .env.ci jest --no-chache",
     "lint": "eslint src migrations --fix --ext .ts"
   },
   "dependencies": {
