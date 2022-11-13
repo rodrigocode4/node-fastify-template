@@ -5,7 +5,7 @@ import {
 } from '~/infrastructure/result.service'
 import messages from '~/infrastructure/messages'
 import repository from './user.repository'
-import { User, UserPick, RequiredUser } from './user.types'
+import { User } from './user.types'
 
 const existById = async (id: number) => repository.existById(id)
 
@@ -15,13 +15,13 @@ const get = async (name?: string): Promise<ServiceResult<{ users: User[] }>> => 
   return createErrorServiceResult(messages.noDataFound)
 }
 
-const getById = async (id: number): Promise<ServiceResult<{user: User}>> => {
+const getById = async (id: number): Promise<ServiceResult<{ user: User }>> => {
   const user = await repository.getById(id)
   if (!user) return createErrorServiceResult(messages.notFindById(id))
-  return createSuccessServiceResult<{ user: User}>({ user })
+  return createSuccessServiceResult<{ user: User }>({ user })
 }
 
-const insert = async (user: UserPick): Promise<ServiceResult<{user: UserPick}>> => {
+const insert = async (user: User): Promise<ServiceResult<{ user: User }>> => {
   const createdUser = await repository.insert(user)
   return createSuccessServiceResult({ user: createdUser })
 }
@@ -33,7 +33,9 @@ const deleteById = async (id: number): Promise<ServiceResult<{ id: number }>> =>
   return createSuccessServiceResult<{ id: number }>({ id })
 }
 
-const update = async (user: UserPick & { id: number }): Promise<ServiceResult<{ user: RequiredUser }>> => {
+const update = async (user: User & { id: number }): Promise<ServiceResult<{ user: User }>> => {
+  const userExists = await existById(user.id)
+  if (!userExists) return createErrorServiceResult(messages.notFindById(user.id))
   const updatedUser = await repository.update(user)
   return createSuccessServiceResult({ user: updatedUser })
 }

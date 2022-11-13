@@ -1,5 +1,5 @@
 import app from './app'
-import database from './infrastructure/database/database.conn'
+import db from '~/infrastructure/database/prisma.client'
 
 const PORT = process.env.PORT || 3000
 
@@ -7,9 +7,13 @@ const start = async () => {
   try {
     await app.listen({ port: PORT as number, host: '0.0.0.0' })
 
-    await database.on('start', (builder) => {
-      app.log.debug(`SQL: ${builder.toQuery()}`)
-    })
+    if (process.env.NODE_ENV === 'dev') {
+      await db.$on('query', ({ query, params, duration }) => {
+        app.log.debug(`Query: ${query}`)
+        app.log.debug(`Params: ${params}`)
+        app.log.debug(`Duration: ${duration}ms`)
+      })
+    }
 
     app.log.info(`Docs listening at http://localhost:${PORT}/docs`)
     app.log.info('Server has started! 🚀')

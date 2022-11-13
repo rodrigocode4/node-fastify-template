@@ -1,42 +1,43 @@
-import database from '~/infrastructure/database/database.conn'
-import { User, UserPick } from './user.types'
+import { User } from './user.types'
+import db from '~/infrastructure/database/prisma.client'
 
-const table = 'users'
-
-const existById = async (id: number) => {
-  const { hasId } = await database<User>(table)
-    .count('id', { as: 'hasId' })
-    .where({ id })
-    .first<{hasId: number}>()
-  return Boolean(hasId)
-}
+const existById = async (id: number) => !!(await db.user.count({ where: { id } }))
 
 const get = (name?: string) => {
-  const query = database<User>(table)
-  if (name) query.whereILike('name', `%${name}%`)
-  return query
+  let usersDb = null
+
+  if (!name) {
+    usersDb = db.user.findMany()
+  }
+
+  usersDb = db.user.findMany({
+    where: {
+      name: {
+        contains: name,
+      },
+    },
+  })
+
+  return usersDb
 }
 
-const getById = (id: number) => database<User>(table)
-  .where({ id }).first()
+const getById = (id: number) => db.user.findFirst({ where: { id } })
 
-const insert = async (user: UserPick) => {
-  const [id] = await database<User>(table).insert(user)
-  return { ...user, id }
-}
+const insert = async (user: User) => db.user.create({ data: { ...user } })
 
-const deleteById = async (id: number) => database<User>(table).where({ id }).delete()
+const deleteById = async (id: number) => db.user.delete({ where: { id } })
 
-const update = async (user: UserPick & { id: number }) => {
-  const id = await database<UserPick & { id: number, updatedAt: string }>(table)
-    .where({ id: user.id })
-    .update({
-      name: user.name,
-      age: user.id,
-      updatedAt: new Date().toISOString().replace('Z', ''),
-    })
-  return { ...user, id }
-}
+const update = async (
+  user: User & { id: number }
+) => db.user.update({
+  data: {
+    name: user.name,
+    age: user.age,
+  },
+  where: {
+    id: user.id,
+  },
+})
 
 export default {
   get,

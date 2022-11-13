@@ -1,12 +1,12 @@
 import { faker } from '@faker-js/faker'
 import { User } from '~/modules/user/user.types'
-import database from '../database/database.conn'
+import db from '~/infrastructure/database/prisma.client'
 
 export default () => ({
   user: {
     name: faker.name.firstName(),
     age: faker.datatype.number(55),
-  } as User,
+  } as (User & { id?: number }),
 
   withId(id: number) {
     this.user.id = id
@@ -23,12 +23,11 @@ export default () => ({
     return this
   },
 
-  create(): User {
+  create() {
     return this.user
   },
 
-  async insert(): Promise<User> {
-    const [id] = await database<User>('users').insert(this.user)
-    return database<User>('users').select().where({ id }).first<User>()
+  async insert() {
+    return db.user.create({ data: { ...this.user } })
   },
 })

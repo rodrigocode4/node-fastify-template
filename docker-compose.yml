@@ -7,8 +7,8 @@ services:
     platform: linux/x86_64
     restart: always
     ports:
-      - "${DB_PORT}:3306"
+      - "3306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
-      MYSQL_PASSWORD: "${DB_PASSWORD}"
-      MYSQL_DATABASE: "${DB_NAME}"
+      MYSQL_ROOT_PASSWORD: "pass1234"
+      MYSQL_PASSWORD: "pass1234"
+      MYSQL_DATABASE: "node_template"
