@@ -9,12 +9,12 @@ services:
       MYSQL_PASSWORD: "pass1234"
 
   test:
-    image: public.ecr.aws/docker/library/node:16-alpine
+    image: node:16-bullseye-slim
     working_dir: /app
     volumes:
       - ${PWD}:/app
     environment:
       - database=database
-    command: sh -c "yarn && yarn test:ci"
+    command: sh -c "yarn install && yarn prisma generate && yarn test:ci"
     depends_on:
       - database
